@@ -1,15 +1,12 @@
-import gamestackTexture2Large from '~/assets/gamestack-list-large.jpg';
-import gamestackTexture2Placeholder from '~/assets/gamestack-list-placeholder.jpg';
-import gamestackTexture2 from '~/assets/gamestack-list.jpg';
-import gamestackTextureLarge from '~/assets/gamestack-login-large.jpg';
-import gamestackTexturePlaceholder from '~/assets/gamestack-login-placeholder.jpg';
-import gamestackTexture from '~/assets/gamestack-login.jpg';
-import sliceTextureLarge from '~/assets/slice-app-large.jpg';
-import sliceTexturePlaceholder from '~/assets/slice-app-placeholder.jpg';
-import sliceTexture from '~/assets/slice-app.jpg';
-import sprTextureLarge from '~/assets/spr-lesson-builder-dark-large.jpg';
-import sprTexturePlaceholder from '~/assets/spr-lesson-builder-dark-placeholder.jpg';
-import sprTexture from '~/assets/spr-lesson-builder-dark.jpg';
+import ocrTexture from '~/assets/ocr-pipeline.jpg';
+import ocrTextureLarge from '~/assets/ocr-pipeline.jpg';
+import ocrTexturePlaceholder from '~/assets/spr-lesson-builder-dark-placeholder.jpg';
+import yoloTexture from '~/assets/yolo-detection.jpg';
+import yoloTextureLarge from '~/assets/yolo-detection.jpg';
+import yoloTexturePlaceholder from '~/assets/gamestack-login-placeholder.jpg';
+import llmTexture from '~/assets/llm-automation.jpg';
+import llmTextureLarge from '~/assets/llm-automation.jpg';
+import llmTexturePlaceholder from '~/assets/slice-app-placeholder.jpg';
 import { Footer } from '~/components/footer';
 import { baseMeta } from '~/utils/meta';
 import { Intro } from './intro';
@@ -41,8 +38,8 @@ export const links = () => {
 
 export const meta = () => {
   return baseMeta({
-    title: 'Designer + Developer',
-    description: `Design portfolio of ${config.name} — a product designer working on web & mobile apps with a focus on motion, experience design, and accessibility.`,
+    title: 'AI Engineer + ML Specialist',
+    description: `Portfolio of ${config.name} — an AI Engineer specializing in Computer Vision, Document Intelligence, and Large Language Models (LLMs).`,
   });
 };
 
@@ -103,17 +100,15 @@ export const Home = () => {
         sectionRef={projectOne}
         visible={visibleSections.includes(projectOne.current)}
         index={1}
-        title="Designing the future of education"
-        description="Designing a platform to help educators build better online courseware"
-        buttonText="View project"
-        buttonLink="/projects/smart-sparrow"
+        title="GLM-OCR Document Intelligence Pipeline"
+        description="Production-grade bilingual (Arabic & English) OCR system using a 1.1B-parameter GLM-OCR model. Achieves 69% accuracy with 1.2s inference latency, integrated with Azure Document AI at 10Pearls."
         model={{
           type: 'laptop',
-          alt: 'Smart Sparrow lesson builder',
+          alt: 'GLM-OCR Document Intelligence Pipeline Dashboard',
           textures: [
             {
-              srcSet: `${sprTexture} 1280w, ${sprTextureLarge} 2560w`,
-              placeholder: sprTexturePlaceholder,
+              srcSet: `${ocrTexture} 1280w, ${ocrTextureLarge} 2560w`,
+              placeholder: ocrTexturePlaceholder,
             },
           ],
         }}
@@ -124,21 +119,15 @@ export const Home = () => {
         sectionRef={projectTwo}
         visible={visibleSections.includes(projectTwo.current)}
         index={2}
-        title="Video game progress tracking"
-        description="Design and development for a video game tracking app built in React Native"
-        buttonText="View website"
-        buttonLink="https://gamestack.hamishw.com"
+        title="YOLOv11 Real-Time Object Detection"
+        description="High-performance real-time object detection system built with YOLOv11 and PyTorch. Supports multi-class detection at 40+ FPS with a custom training pipeline, deployed for surveillance and industrial inspection use cases."
         model={{
-          type: 'phone',
-          alt: 'App login screen',
+          type: 'laptop',
+          alt: 'YOLOv11 Real-Time Object Detection Dashboard',
           textures: [
             {
-              srcSet: `${gamestackTexture} 375w, ${gamestackTextureLarge} 750w`,
-              placeholder: gamestackTexturePlaceholder,
-            },
-            {
-              srcSet: `${gamestackTexture2} 375w, ${gamestackTexture2Large} 750w`,
-              placeholder: gamestackTexture2Placeholder,
+              srcSet: `${yoloTexture} 1280w, ${yoloTextureLarge} 2560w`,
+              placeholder: yoloTexturePlaceholder,
             },
           ],
         }}
@@ -148,17 +137,15 @@ export const Home = () => {
         sectionRef={projectThree}
         visible={visibleSections.includes(projectThree.current)}
         index={3}
-        title="Biomedical image collaboration"
-        description="Increasing the amount of collaboration in Slice, an app for biomedical imaging"
-        buttonText="View project"
-        buttonLink="/projects/slice"
+        title="LLM-Powered Document Automation Platform"
+        description="AI automation platform leveraging GPT-4 and custom LLM agents for intelligent document processing — extracting, validating, and structuring invoice & form data into structured JSON outputs via agentic function-calling pipelines."
         model={{
           type: 'laptop',
-          alt: 'Annotating a biomedical image in the Slice app',
+          alt: 'LLM Document Automation Platform',
           textures: [
             {
-              srcSet: `${sliceTexture} 800w, ${sliceTextureLarge} 1920w`,
-              placeholder: sliceTexturePlaceholder,
+              srcSet: `${llmTexture} 1280w, ${llmTextureLarge} 2560w`,
+              placeholder: llmTexturePlaceholder,
             },
           ],
         }}

@@ -25,7 +25,11 @@ export default defineConfig({
       remarkPlugins: [remarkFrontmatter, remarkMdxFrontmatter],
       providerImportSource: '@mdx-js/react',
     }),
-    remixCloudflareDevProxy(),
+    remixCloudflareDevProxy({
+      getLoadContext({ context }) {
+        return { cloudflare: context.cloudflare };
+      },
+    }),
     remix({
       routes(defineRoutes) {
         return defineRoutes(route => {

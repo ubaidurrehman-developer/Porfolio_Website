@@ -1,11 +1,16 @@
 {
-  "name": "Hamish Williams",
-  "role": "Designer",
-  "disciplines": ["Developer", "Prototyper", "Animator", "Illustrator", "Modder"],
-  "url": "https://hamishw.com",
-  "bluesky": "hamishw.com",
-  "figma": "@Hamish",
-  "github": "HamishMW",
-  "repo": "https://github.com/HamishMW/portfolio",
-  "ascii": "__  __  __\n\u005C \u005C \u005C \u005C \u005C\u2215\n \u005C \u005C\u2215\u005C \u005C\n  \u005C\u2215  \u005C\u2215\n"
+  "name": "Ubaid ur Rehman",
+  "role": "AI Engineer",
+  "disciplines": [
+    "ML Specialist",
+    "Computer Vision",
+    "LLM Developer",
+    "Document AI",
+    "Automation"
+  ],
+  "url": "https://ubaid.ai",
+  "github": "ubaidurrehman-developer",
+  "linkedin": "https://www.linkedin.com/in/ubaid-ur-rehman-5830b324a/",
+  "repo": "https://github.com/ubaidurrehman-developer",
+  "ascii": " __  __  ____\n|  \\/  ||  _ \\\n| |\\/| || |_) |\n| |  | ||  _ <\n|_|  |_||_| \\_\\\n"
 }

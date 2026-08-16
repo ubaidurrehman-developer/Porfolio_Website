@@ -58,7 +58,8 @@
 }
 
 .divider {
-  margin-bottom: var(--space3XL);
+  margin-bottom: var(--spaceXL);
+
   transition-property: opacity;
   transition-timing-function: var(--bezierFastoutSlowin);
   transition-duration: var(--durationXL);

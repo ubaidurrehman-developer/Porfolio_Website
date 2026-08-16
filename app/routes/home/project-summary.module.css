@@ -98,6 +98,10 @@
     top: 6%;
     left: 14%;
 
+    .summary[data-alternate='true'] & {
+      left: -14%;
+    }
+
     @media (--mediaDesktop) {
       --width: 180%;
     }
@@ -163,6 +167,11 @@
     right: -36%;
     bottom: 24%;
     transform: translateY(50%);
+
+    .summary[data-alternate='true'] & {
+      right: auto;
+      left: -36%;
+    }
 
     @media (--mediaTablet) {
       width: 80%;

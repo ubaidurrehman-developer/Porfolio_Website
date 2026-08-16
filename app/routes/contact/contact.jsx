@@ -15,7 +15,7 @@ import { cssProps, msToNum, numToMs } from '~/utils/style';
 import { baseMeta } from '~/utils/meta';
 import { Form, useActionData, useNavigation } from '@remix-run/react';
 import { json } from '@remix-run/cloudflare';
-import { SESClient, SendEmailCommand } from '@aws-sdk/client-ses';
+import { Resend } from 'resend';
 import styles from './contact.module.css';
 
 export const meta = () => {
@@ -31,13 +31,12 @@ const MAX_MESSAGE_LENGTH = 4096;
 const EMAIL_PATTERN = /(.+)@(.+){2,}\.(.+){2,}/;
 
 export async function action({ context, request }) {
-  const ses = new SESClient({
-    region: 'us-east-1',
-    credentials: {
-      accessKeyId: context.cloudflare.env.AWS_ACCESS_KEY_ID,
-      secretAccessKey: context.cloudflare.env.AWS_SECRET_ACCESS_KEY,
-    },
-  });
+  const apiKey =
+    context?.cloudflare?.env?.RESEND_API_KEY || process.env.RESEND_API_KEY;
+  const toEmail =
+    context?.cloudflare?.env?.EMAIL || process.env.EMAIL;
+
+  const resend = new Resend(apiKey);
 
   const formData = await request.formData();
   const isBot = String(formData.get('name'));
@@ -69,26 +68,18 @@ export async function action({ context, request }) {
     return json({ errors });
   }
 
-  // Send email via Amazon SES
-  await ses.send(
-    new SendEmailCommand({
-      Destination: {
-        ToAddresses: [context.cloudflare.env.EMAIL],
-      },
-      Message: {
-        Body: {
-          Text: {
-            Data: `From: ${email}\n\n${message}`,
-          },
-        },
-        Subject: {
-          Data: `Portfolio message from ${email}`,
-        },
-      },
-      Source: `Portfolio <${context.cloudflare.env.FROM_EMAIL}>`,
-      ReplyToAddresses: [email],
-    })
-  );
+  // Send email via Resend
+  const { error } = await resend.emails.send({
+    from: 'Portfolio Contact <onboarding@resend.dev>',
+    to: [toEmail],
+    replyTo: email,
+    subject: `Portfolio message from ${email}`,
+    text: `From: ${email}\n\n${message}`,
+  });
+
+  if (error) {
+    return json({ errors: { message: 'Failed to send message. Please try again later.' } });
+  }
 
   return json({ success: true });
 }
@@ -126,6 +117,7 @@ export const Contact = () => {
               data-status={status}
               style={getDelay(tokens.base.durationXS, initDelay, 0.4)}
             />
+
             {/* Hidden honeypot field to identify bots */}
             <Input
               className={styles.botkiller}

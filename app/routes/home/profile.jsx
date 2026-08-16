@@ -18,19 +18,21 @@ import styles from './profile.module.css';
 const ProfileText = ({ visible, titleId }) => (
   <Fragment>
     <Heading className={styles.title} data-visible={visible} level={3} id={titleId}>
-      <DecoderText text="Hi there" start={visible} delay={500} />
+      <DecoderText text="Hi, I'm Ubaid" start={visible} delay={500} />
     </Heading>
     <Text className={styles.description} data-visible={visible} size="l" as="p">
-      I’m Hamish, currently I live in Sydney working as a senior product designer at{' '}
-      <Link href="https://www.qwilr.com">Qwilr</Link>. My projects include UX design, UI
-      animations, and icon illustration. Being comfortable with code allows me to rapidly
-      prototype and validate experiences. If you’re interested in the tools and software I
-      use check out my <Link href="/uses">uses page</Link>.
+      I'm Ubaid ur Rehman, an AI Engineer & ML Specialist based in Pakistan. I specialize in
+      Computer Vision, Document Intelligence, and Large Language Models (LLMs). My work
+      includes building production-grade OCR pipelines (GLM-OCR, 1.1B params), YOLO-based
+      object detection systems, and Azure Document AI integrations at{' '}
+      <Link href="https://10pearls.com">10Pearls</Link> and{' '}
+      <Link href="https://formmate.ai">FormMate</Link>.
     </Text>
     <Text className={styles.description} data-visible={visible} size="l" as="p">
-      In my spare time I like to practice Brazilian Jiu Jitsu, play video games, and{' '}
-      <Link href="/projects/volkihar-knight">make mods</Link>. I’m always down for hearing
-      about new projects, so feel free to drop me a line.
+      I'm passionate about pushing the boundaries of AI in real-world applications —
+      from 69% GLM-OCR accuracy improvements to 1.2s inference latency at scale. I'm
+      always open to exciting AI/ML projects and collaborations, so feel free to{' '}
+      <Link href="/contact">reach out</Link>.
     </Text>
   </Fragment>
 );
@@ -86,7 +88,7 @@ export const Profile = ({ id, visible, sectionRef }) => {
                   width={960}
                   height={1280}
                   sizes={`(max-width: ${media.mobile}px) 100vw, 480px`}
-                  alt="Me smiling like a goofball at the Qwilr office in Sydney"
+                  alt="Ubaid ur Rehman — AI Engineer & ML Specialist"
                 />
                 <svg className={styles.svg} data-visible={visible} viewBox="0 0 136 766">
                   <use href={`${katakana}#katakana-profile`} />
