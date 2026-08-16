@@ -35,6 +35,7 @@ export default defineConfig({
         return defineRoutes(route => {
           route('/', 'routes/home/route.js', { index: true });
           route('/googlecf61621316c46ac8.html', 'routes/google-verification.js');
+          route('/sitemap.xml', 'routes/sitemap.js');
         });
       },
     }),
