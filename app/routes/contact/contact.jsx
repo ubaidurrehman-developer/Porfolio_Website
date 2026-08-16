@@ -68,20 +68,36 @@ export async function action({ context, request }) {
     return json({ errors });
   }
 
-  // Send email via Resend
-  const { error } = await resend.emails.send({
-    from: 'Portfolio Contact <onboarding@resend.dev>',
-    to: [toEmail],
-    replyTo: email,
-    subject: `Portfolio message from ${email}`,
-    text: `From: ${email}\n\n${message}`,
-  });
-
-  if (error) {
-    return json({ errors: { message: 'Failed to send message. Please try again later.' } });
+  if (!apiKey) {
+    console.error('Missing RESEND_API_KEY environment variable');
+    return json({ errors: { message: 'Contact service error: RESEND_API_KEY is not configured in Cloudflare environment variables.' } });
   }
 
-  return json({ success: true });
+  if (!toEmail) {
+    console.error('Missing EMAIL environment variable');
+    return json({ errors: { message: 'Contact service error: EMAIL is not configured in Cloudflare environment variables.' } });
+  }
+
+  // Send email via Resend
+  try {
+    const { error } = await resend.emails.send({
+      from: 'Portfolio Contact <onboarding@resend.dev>',
+      to: [toEmail],
+      replyTo: email,
+      subject: `Portfolio message from ${email}`,
+      text: `From: ${email}\n\n${message}`,
+    });
+
+    if (error) {
+      console.error('Resend API error:', error);
+      return json({ errors: { message: error.message || 'Failed to send message via Resend. Please try again later.' } });
+    }
+
+    return json({ success: true });
+  } catch (err) {
+    console.error('Contact form submission exception:', err);
+    return json({ errors: { message: err.message || 'Failed to send message. Please try again later.' } });
+  }
 }
 
 export const Contact = () => {
