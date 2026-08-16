@@ -10,16 +10,10 @@ _______________________________________________________________________________
 
 DESIGNER | デザイナー
 
-Hamish Williams
-Hand crafted design & web development
+Ubaid ur Rehman
+AI Engineer & Full-Stack Developer
 
-Design tools:
-Figma
-Photoshop
-Blender
-
-twitter.com/hamishmw
-github.com/hamishmw
+github.com/ubaidurrehman-developer
 
 _______________________________________________________________________________
 

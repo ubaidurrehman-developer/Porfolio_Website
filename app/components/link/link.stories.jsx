@@ -7,8 +7,8 @@ export default {
 
 export const Default = () => (
   <StoryContainer style={{ fontSize: 18 }}>
-    <Link href="https://hamishw.com">Primary link</Link>
-    <Link secondary href="https://hamishw.com">
+    <Link href="https://ubaid.ai">Primary link</Link>
+    <Link secondary href="https://ubaid.ai">
       Secondary link
     </Link>
   </StoryContainer>
