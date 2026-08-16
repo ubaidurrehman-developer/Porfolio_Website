@@ -111,6 +111,10 @@ export default function App() {
           name="color-scheme"
           content={theme === 'light' ? 'light dark' : 'dark light'}
         />
+        <meta
+          name="google-site-verification"
+          content="Ety9Pqk8fvBqJ1E_McC745C07p4hFaqhT0u8eZb7sdY"
+        />
         <style dangerouslySetInnerHTML={{ __html: themeStyles }} />
         <Meta />
         <Links />
