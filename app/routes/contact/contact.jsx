@@ -36,12 +36,10 @@ export async function action({ context, request }) {
   const toEmail =
     context?.cloudflare?.env?.EMAIL || process.env.EMAIL;
 
-  const resend = new Resend(apiKey);
-
   const formData = await request.formData();
-  const isBot = String(formData.get('name'));
-  const email = String(formData.get('email'));
-  const message = String(formData.get('message'));
+  const isBot = String(formData.get('name') || '');
+  const email = String(formData.get('email') || '');
+  const message = String(formData.get('message') || '');
   const errors = {};
 
   // Return without sending if a bot trips the honeypot
@@ -77,6 +75,8 @@ export async function action({ context, request }) {
     console.error('Missing EMAIL environment variable');
     return json({ errors: { message: 'Contact service error: EMAIL is not configured in Cloudflare environment variables.' } });
   }
+
+  const resend = new Resend(apiKey);
 
   // Send email via Resend
   try {
