@@ -58,7 +58,16 @@ export function ProjectSummary({
         data-device={device}
         viewBox="0 0 751 136"
       >
-        <use href={`${katakana}#katakana-project`} />
+        <text
+          x="50%"
+          y="110"
+          textAnchor="middle"
+          fontFamily="serif"
+          fontSize="120"
+          fontWeight="700"
+          letterSpacing="8"
+          fill="currentColor"
+        >プロジェクト</text>
       </svg>
     );
   }

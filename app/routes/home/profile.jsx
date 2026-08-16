@@ -91,7 +91,18 @@ export const Profile = ({ id, visible, sectionRef }) => {
                   alt="Ubaid ur Rehman — AI Engineer & ML Specialist"
                 />
                 <svg className={styles.svg} data-visible={visible} viewBox="0 0 136 766">
-                  <use href={`${katakana}#katakana-profile`} />
+                  <text
+                    x="50%"
+                    y="50%"
+                    textAnchor="middle"
+                    dominantBaseline="middle"
+                    writingMode="vertical-rl"
+                    fontFamily="serif"
+                    fontSize="108"
+                    fontWeight="700"
+                    letterSpacing="16"
+                    fill="currentColor"
+                  >ウバイド</text>
                 </svg>
               </div>
             </div>
