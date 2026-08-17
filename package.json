@@ -8,7 +8,8 @@
   "type": "module",
   "scripts": {
     "build": "remix vite:build",
-    "dev": "node ./scripts/dev.cjs && remix vite:dev",
+    "dev": "node ./scripts/dev.cjs && remix vite:dev --host 0.0.0.0",
+    "preview": "npm run build && wrangler pages dev ./build/client --ip 0.0.0.0 --port 7777",
     "start": "wrangler pages dev ./build/client",
     "postinstall": "node ./scripts/draco.cjs",
     "deploy": "npm run build && wrangler pages deploy ./build/client --project-name portfolio",

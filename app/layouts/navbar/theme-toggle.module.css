@@ -11,18 +11,20 @@
 
     @media (--mediaMobile), (--mediaMobileLS) {
       &:not([data-mobile='true']) {
-        display: none;
+        --inset: calc(var(--spaceOuter) - var(--offset));
+        top: var(--inset);
+        right: calc(var(--inset) + var(--space2XL) + var(--spaceS));
       }
     }
 
     &[data-mobile='true'] {
-      --offset: var(--spaceXS);
-      --inset: calc(var(--spaceXL) - var(--offset));
-
+      position: relative;
       top: unset;
-      bottom: var(--inset);
-      margin-top: 0;
-      margin-right: 0;
+      bottom: unset;
+      right: unset;
+      margin-top: var(--spaceL);
+      margin-bottom: var(--spaceL);
+      z-index: auto;
     }
   }
 

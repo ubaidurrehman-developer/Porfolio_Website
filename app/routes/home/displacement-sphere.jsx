@@ -59,7 +59,7 @@ export const DisplacementSphere = props => {
       failIfMajorPerformanceCaveat: true,
     });
     renderer.current.setSize(innerWidth, innerHeight);
-    renderer.current.setPixelRatio(1);
+    renderer.current.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
     renderer.current.outputColorSpace = LinearSRGBColorSpace;
 
     camera.current = new PerspectiveCamera(54, innerWidth / innerHeight, 0.1, 100);
@@ -80,7 +80,7 @@ export const DisplacementSphere = props => {
     };
 
     startTransition(() => {
-      geometry.current = new SphereGeometry(32, 128, 128);
+      geometry.current = new SphereGeometry(32, 64, 64);
       sphere.current = new Mesh(geometry.current, material.current);
       sphere.current.position.z = 0;
       sphere.current.modifier = Math.random();
