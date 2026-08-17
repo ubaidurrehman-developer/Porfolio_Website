@@ -1,6 +1,7 @@
 import ocrTexture from '~/assets/ocr-pipeline.jpg';
 import ocrTextureLarge from '~/assets/ocr-pipeline.jpg';
 import ocrTexturePlaceholder from '~/assets/spr-lesson-builder-dark-placeholder.jpg';
+import housePriceTexture from '~/assets/house-price.jpg';
 import yoloTexture from '~/assets/yolo-detection.jpg';
 import yoloTextureLarge from '~/assets/yolo-detection.jpg';
 import yoloTexturePlaceholder from '~/assets/gamestack-login-placeholder.jpg';
@@ -50,10 +51,11 @@ export const Home = () => {
   const projectOne = useRef();
   const projectTwo = useRef();
   const projectThree = useRef();
+  const projectFour = useRef();
   const details = useRef();
 
   useEffect(() => {
-    const sections = [intro, projectOne, projectTwo, projectThree, details];
+    const sections = [intro, projectOne, projectTwo, projectThree, projectFour, details];
 
     const sectionObserver = new IntersectionObserver(
       (entries, observer) => {
@@ -101,7 +103,7 @@ export const Home = () => {
         visible={visibleSections.includes(projectOne.current)}
         index={1}
         title="GLM-OCR Document Intelligence Pipeline"
-        description="Production-grade bilingual (Arabic & English) OCR system using a 1.1B-parameter GLM-OCR model. Achieves 69% accuracy with 1.2s inference latency, integrated with Azure Document AI at 10Pearls."
+        description="Production-grade document intelligence system using a 1.1B-parameter GLM-OCR model. Achieves 88% field detection accuracy with 1.2s inference latency, integrated with Azure Document AI at 10Pearls."
         model={{
           type: 'laptop',
           alt: 'GLM-OCR Document Intelligence Pipeline Dashboard',
@@ -119,11 +121,11 @@ export const Home = () => {
         sectionRef={projectTwo}
         visible={visibleSections.includes(projectTwo.current)}
         index={2}
-        title="YOLOv11 Real-Time Object Detection"
-        description="High-performance real-time object detection system built with YOLOv11 and PyTorch. Supports multi-class detection at 40+ FPS with a custom training pipeline, deployed for surveillance and industrial inspection use cases."
+        title="FormMate — Multi-Agent Document Intelligence (FYP)"
+        description="Multi-agent pipeline combining YOLOv11 OBB, Tesseract OCR, and FAISS achieving 85–90% field detection accuracy at 10–15s end-to-end. Built with Django + React full-stack, featuring JWT authentication, RBAC, and ONNX Runtime deployment."
         model={{
           type: 'laptop',
-          alt: 'YOLOv11 Real-Time Object Detection Dashboard',
+          alt: 'FormMate Document Intelligence Platform Dashboard',
           textures: [
             {
               srcSet: `${yoloTexture} 1280w, ${yoloTextureLarge} 2560w`,
@@ -137,15 +139,34 @@ export const Home = () => {
         sectionRef={projectThree}
         visible={visibleSections.includes(projectThree.current)}
         index={3}
-        title="LLM-Powered Document Automation Platform"
-        description="AI automation platform leveraging GPT-4 and custom LLM agents for intelligent document processing — extracting, validating, and structuring invoice & form data into structured JSON outputs via agentic function-calling pipelines."
+        title="Job Automation Pipeline"
+        description="End-to-end automated pipeline scraping LinkedIn listings via Selenium + n8n, delivering 500+ structured job listings/week to email with a 90% reduction in manual job search effort."
         model={{
           type: 'laptop',
-          alt: 'LLM Document Automation Platform',
+          alt: 'Job Automation Pipeline Dashboard',
           textures: [
             {
               srcSet: `${llmTexture} 1280w, ${llmTextureLarge} 2560w`,
               placeholder: llmTexturePlaceholder,
+            },
+          ],
+        }}
+      />
+      <ProjectSummary
+        id="project-4"
+        alternate
+        sectionRef={projectFour}
+        visible={visibleSections.includes(projectFour.current)}
+        index={4}
+        title="House Price Prediction System"
+        description="Trained 5 ML regression models on a scraped real estate dataset, achieving 89–92% accuracy via a soft-voting ensemble model. Deployed as an interactive web application using Scikit-learn, XGBoost, Flask, and Streamlit."
+        model={{
+          type: 'laptop',
+          alt: 'House Price Prediction System Dashboard',
+          textures: [
+            {
+              srcSet: `${housePriceTexture} 1280w, ${housePriceTexture} 2560w`,
+              placeholder: yoloTexturePlaceholder,
             },
           ],
         }}

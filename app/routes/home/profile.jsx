@@ -23,14 +23,14 @@ const ProfileText = ({ visible, titleId }) => (
     <Text className={styles.description} data-visible={visible} size="l" as="p">
       I'm Ubaid ur Rehman, an AI Engineer & ML Specialist based in Pakistan. I specialize in
       Computer Vision, Document Intelligence, and Large Language Models (LLMs). My work
-      includes building production-grade OCR pipelines (GLM-OCR, 1.1B params), YOLO-based
-      object detection systems, and Azure Document AI integrations at{' '}
+      includes building production-grade OCR pipelines (GLM-OCR, 1.1B params), multi-agent
+      document intelligence systems (FormMate), and workflow automation platforms at{' '}
       <Link href="https://10pearls.com">10Pearls</Link> and{' '}
       <Link href="https://formmate.ai">FormMate</Link>.
     </Text>
     <Text className={styles.description} data-visible={visible} size="l" as="p">
       I'm passionate about pushing the boundaries of AI in real-world applications —
-      from 69% GLM-OCR accuracy improvements to 1.2s inference latency at scale. I'm
+      from 85–90% accuracy improvements to 1.2s inference latency at scale. I'm
       always open to exciting AI/ML projects and collaborations, so feel free to{' '}
       <Link href="/contact">reach out</Link>.
     </Text>
