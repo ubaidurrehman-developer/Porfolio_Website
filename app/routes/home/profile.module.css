@@ -44,7 +44,11 @@
   @media (--mediaTablet) {
     max-width: 600px;
     grid-template-columns: 100%;
-    justify-items: flex-start;
+    justify-items: center;
+  }
+
+  @media (--mediaMobile) {
+    justify-items: center;
   }
 }
 
@@ -59,11 +63,32 @@
   @media (--mediaTablet) {
     align-items: flex-start;
     text-align: left;
+    justify-self: flex-start;
+    width: 100%;
   }
 
   @media (--mediaMobile) {
     align-items: flex-start;
     text-align: left;
+    justify-self: flex-start;
+    width: 100%;
+  }
+
+  /* Image column — center on tablet and mobile */
+  &:nth-child(2) {
+    @media (--mediaTablet) {
+      align-items: center;
+      justify-self: center;
+      width: 100%;
+      max-width: 400px;
+    }
+
+    @media (--mediaMobile) {
+      align-items: center;
+      justify-self: center;
+      width: 100%;
+      max-width: 340px;
+    }
   }
 }
 
