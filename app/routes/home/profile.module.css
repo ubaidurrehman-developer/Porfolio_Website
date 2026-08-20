@@ -199,6 +199,20 @@
   }
 }
 
+.buttonGroup {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: var(--spaceM);
+  flex-wrap: wrap;
+  width: 100%;
+
+  @media (--mediaMobile) {
+    flex-direction: column;
+    align-items: stretch;
+  }
+}
+
 .button {
   opacity: 0;
   transition: opacity var(--durationXL) ease var(--durationL);
