@@ -18,23 +18,20 @@ import styles from './profile.module.css';
 const ProfileText = ({ visible, titleId }) => (
   <Fragment>
     <Heading className={styles.title} data-visible={visible} level={3} id={titleId}>
-      <DecoderText text="Hi, I'm Ubaid" start={visible} delay={500} />
+      <DecoderText text="Build Smarter. Move Faster. Ship AI That Matters." start={visible} delay={500} />
     </Heading>
     <Text className={styles.description} data-visible={visible} size="l" as="p">
-      I'm Ubaid ur Rehman, an AI Engineer &amp; ML Specialist based in Pakistan. I design,
-      build, and deploy intelligent systems across the full AI spectrum — from Computer Vision
-      and Document Intelligence to Large Language Models (LLMs), RAG pipelines, and autonomous
-      workflow automations at <Link href="https://10pearls.com">10Pearls</Link> and{' '}
-      <Link href="https://formmate.ai">FormMate</Link>.
+      I’m Ubaid ur Rehman, an AI Engineer &amp; ML Specialist based in Pakistan, passionate about turning ambitious ideas into intelligent, production-ready products.
     </Text>
     <Text className={styles.description} data-visible={visible} size="l" as="p">
-      Ready to evolve your product with AI? From initial concept to production scale, I help
-      forward-thinking teams turn ambitious ideas into fast, reliable, and intelligent applications
-      that deliver real business impact.
+      I design, build, and deploy AI systems across the modern AI landscape — from Computer Vision and Document Intelligence to LLMs, RAG pipelines, AI agents, and autonomous workflow automation. I’ve worked on real-world AI solutions at <Link href="https://formmate.ai">FormMate</Link>, helping transform complex challenges into scalable, reliable, and impactful products.
     </Text>
     <Text className={styles.description} data-visible={visible} size="l" as="p">
-      Have an exciting project in mind or looking to bring intelligent capabilities to your stack?
-      Feel free to <Link href="/contact">reach out and let's build something exceptional together &rarr;</Link>
+      <strong>Ready to put AI to work?</strong><br />
+      Whether you're starting with an idea, improving an existing product, or looking to bring intelligent capabilities into your tech stack, I can help take it from concept to production. Together, we can build AI solutions that are not just impressive — but fast, reliable, scalable, and built to create real business value.
+    </Text>
+    <Text className={styles.description} data-visible={visible} size="l" as="p">
+      Have an exciting project in mind? Let's turn it into something exceptional. &rarr; <Link href="/contact">Let's Talk</Link>
     </Text>
   </Fragment>
 );
@@ -66,7 +63,7 @@ export const Profile = ({ id, visible, sectionRef }) => {
                 href="/contact"
                 icon="send"
               >
-                Send me a message
+                Let's Talk
               </Button>
             </div>
             <div className={styles.column}>

@@ -93,7 +93,8 @@
 }
 
 .title {
-  white-space: nowrap;
+  white-space: normal;
+  line-height: var(--lineHeightTitle);
   margin-bottom: var(--spaceL);
   opacity: 0;
   transition: opacity var(--durationXL) ease var(--durationM);
