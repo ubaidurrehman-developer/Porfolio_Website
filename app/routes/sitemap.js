@@ -7,32 +7,32 @@ export const loader = async () => {
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://ubaidurrehman.pages.dev/contact/</loc>
+    <loc>https://ubaidurrehman.pages.dev/contact</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://ubaidurrehman.pages.dev/articles/</loc>
+    <loc>https://ubaidurrehman.pages.dev/articles</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://ubaidurrehman.pages.dev/uses/</loc>
+    <loc>https://ubaidurrehman.pages.dev/uses</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://ubaidurrehman.pages.dev/projects/slice/</loc>
+    <loc>https://ubaidurrehman.pages.dev/projects/slice</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://ubaidurrehman.pages.dev/projects/smart-sparrow/</loc>
+    <loc>https://ubaidurrehman.pages.dev/projects/smart-sparrow</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://ubaidurrehman.pages.dev/projects/volkihar-knight/</loc>
+    <loc>https://ubaidurrehman.pages.dev/projects/volkihar-knight</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>

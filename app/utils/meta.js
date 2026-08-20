@@ -11,7 +11,8 @@ export function baseMeta({
   pathname = '',
 }) {
   const titleText = [prefix, title].filter(Boolean).join(' | ');
-  const canonicalUrl = `${url}${pathname}`;
+  const cleanPath = pathname === '/' || !pathname ? '' : (pathname.startsWith('/') ? pathname : `/${pathname}`);
+  const canonicalUrl = cleanPath ? `${url}${cleanPath}` : `${url}/`;
 
   const schemaOrgJSONLD = {
     '@context': 'https://schema.org',
@@ -62,7 +63,6 @@ export function baseMeta({
     { property: 'twitter:site', content: canonicalUrl },
     { property: 'twitter:creator', content: twitter },
     { property: 'twitter:image', content: ogImage },
-    { tagName: 'link', rel: 'canonical', href: canonicalUrl },
     {
       'script:ld+json': schemaOrgJSONLD,
     },
