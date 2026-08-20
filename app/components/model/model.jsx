@@ -33,6 +33,7 @@ import { classes, cssProps, numToMs } from '~/utils/style';
 import {
   cleanRenderer,
   cleanScene,
+  isWebGLAvailable,
   modelLoader,
   removeLights,
   textureLoader,
@@ -89,15 +90,22 @@ export const Model = ({
   const rotationY = useSpring(0, rotationSpringConfig);
 
   useEffect(() => {
+    if (!isWebGLAvailable() || !canvas.current || !container.current) return;
+
     const { clientWidth, clientHeight } = container.current;
 
-    renderer.current = new WebGLRenderer({
-      canvas: canvas.current,
-      alpha: true,
-      antialias: false,
-      powerPreference: 'high-performance',
-      failIfMajorPerformanceCaveat: true,
-    });
+    try {
+      renderer.current = new WebGLRenderer({
+        canvas: canvas.current,
+        alpha: true,
+        antialias: false,
+        powerPreference: 'high-performance',
+        failIfMajorPerformanceCaveat: false,
+      });
+    } catch (error) {
+      console.warn('Model WebGL initialization failed:', error);
+      return;
+    }
 
     renderer.current.setPixelRatio(2);
     renderer.current.setSize(clientWidth, clientHeight);
@@ -211,9 +219,9 @@ export const Model = ({
     const unsubscribeY = rotationY.on('change', renderFrame);
 
     return () => {
-      renderTarget.current.dispose();
-      renderTargetBlur.current.dispose();
-      removeLights(lights.current);
+      renderTarget.current?.dispose();
+      renderTargetBlur.current?.dispose();
+      removeLights(lights.current || []);
       cleanScene(scene.current);
       cleanRenderer(renderer.current);
       unsubscribeX();
@@ -223,6 +231,8 @@ export const Model = ({
   }, []);
 
   const blurShadow = useCallback(amount => {
+    if (!renderer.current || !renderTarget.current || !renderTargetBlur.current || !blurPlane.current || !shadowCamera.current) return;
+
     blurPlane.current.visible = true;
 
     // Blur horizontally and draw in the renderTargetBlur
@@ -246,6 +256,7 @@ export const Model = ({
 
   // Handle render passes for a single frame
   const renderFrame = useCallback(() => {
+    if (!renderer.current || !scene.current || !camera.current || !renderTarget.current || !modelGroup.current) return;
     const blurAmount = 5;
 
     // Remove the background
@@ -305,7 +316,7 @@ export const Model = ({
   // Handle window resize
   useEffect(() => {
     const handleResize = () => {
-      if (!container.current) return;
+      if (!container.current || !renderer.current || !camera.current) return;
 
       const { clientWidth, clientHeight } = container.current;
 
@@ -370,9 +381,10 @@ const Device = ({
 
   useEffect(() => {
     const applyScreenTexture = async (texture, node) => {
+      if (!renderer?.current) return;
       texture.colorSpace = SRGBColorSpace;
       texture.flipY = false;
-      texture.anisotropy = renderer.current.capabilities.getMaxAnisotropy();
+      texture.anisotropy = renderer.current.capabilities?.getMaxAnisotropy?.() || 1;
       texture.generateMipmaps = false;
 
       // Decode the texture to prevent jank on first render
@@ -500,6 +512,7 @@ const Device = ({
     let animation;
 
     const onModelLoad = async () => {
+      if (!renderer?.current || !modelGroup?.current) return;
       const { loadFullResTexture, playAnimation } = await loadDevice.start();
 
       setLoaded(true);

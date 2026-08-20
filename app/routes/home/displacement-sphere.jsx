@@ -18,7 +18,7 @@ import {
 } from 'three';
 import { media } from '~/utils/style';
 import { throttle } from '~/utils/throttle';
-import { cleanRenderer, cleanScene, removeLights } from '~/utils/three';
+import { cleanRenderer, cleanScene, isWebGLAvailable, removeLights } from '~/utils/three';
 import fragmentShader from './displacement-sphere-fragment.glsl?raw';
 import vertexShader from './displacement-sphere-vertex.glsl?raw';
 import styles from './displacement-sphere.module.css';
@@ -49,15 +49,24 @@ export const DisplacementSphere = props => {
   const rotationY = useSpring(0, springConfig);
 
   useEffect(() => {
+    if (!isWebGLAvailable() || !canvasRef.current) return;
+
     const { innerWidth, innerHeight } = window;
     mouse.current = new Vector2(0.8, 0.5);
-    renderer.current = new WebGLRenderer({
-      canvas: canvasRef.current,
-      antialias: false,
-      alpha: true,
-      powerPreference: 'high-performance',
-      failIfMajorPerformanceCaveat: true,
-    });
+
+    try {
+      renderer.current = new WebGLRenderer({
+        canvas: canvasRef.current,
+        antialias: false,
+        alpha: true,
+        powerPreference: 'high-performance',
+        failIfMajorPerformanceCaveat: false,
+      });
+    } catch (error) {
+      console.warn('DisplacementSphere WebGL initialization failed:', error);
+      return;
+    }
+
     renderer.current.setSize(innerWidth, innerHeight);
     renderer.current.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
     renderer.current.outputColorSpace = LinearSRGBColorSpace;
@@ -84,7 +93,7 @@ export const DisplacementSphere = props => {
       sphere.current = new Mesh(geometry.current, material.current);
       sphere.current.position.z = 0;
       sphere.current.modifier = Math.random();
-      scene.current.add(sphere.current);
+      scene.current?.add(sphere.current);
     });
 
     return () => {
@@ -94,6 +103,8 @@ export const DisplacementSphere = props => {
   }, []);
 
   useEffect(() => {
+    if (!scene.current) return;
+
     const dirLight = new DirectionalLight(0xffffff, theme === 'light' ? 1.8 : 2.0);
     const ambientLight = new AmbientLight(0xffffff, theme === 'light' ? 2.7 : 0.4);
 
@@ -102,7 +113,7 @@ export const DisplacementSphere = props => {
     dirLight.position.y = 100;
 
     lights.current = [dirLight, ambientLight];
-    lights.current.forEach(light => scene.current.add(light));
+    lights.current.forEach(light => scene.current?.add(light));
 
     return () => {
       removeLights(lights.current);
@@ -110,6 +121,8 @@ export const DisplacementSphere = props => {
   }, [theme]);
 
   useEffect(() => {
+    if (!renderer.current || !camera.current || !sphere.current) return;
+
     const { width, height } = windowSize;
 
     const adjustedHeight = height + height * 0.3;
@@ -164,16 +177,18 @@ export const DisplacementSphere = props => {
         uniforms.current.time.value = 0.00005 * (Date.now() - start.current);
       }
 
-      sphere.current.rotation.z += 0.001;
-      sphere.current.rotation.x = rotationX.get();
-      sphere.current.rotation.y = rotationY.get();
+      if (sphere.current && renderer.current && scene.current && camera.current) {
+        sphere.current.rotation.z += 0.001;
+        sphere.current.rotation.x = rotationX.get();
+        sphere.current.rotation.y = rotationY.get();
 
-      renderer.current.render(scene.current, camera.current);
+        renderer.current.render(scene.current, camera.current);
+      }
     };
 
     if (!reduceMotion && isInViewport) {
       animate();
-    } else {
+    } else if (renderer.current && scene.current && camera.current) {
       renderer.current.render(scene.current, camera.current);
     }
 

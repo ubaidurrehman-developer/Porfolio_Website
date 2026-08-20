@@ -14,7 +14,7 @@ import {
 } from 'three';
 import { resolveSrcFromSrcSet } from '~/utils/image';
 import { cssProps } from '~/utils/style';
-import { cleanRenderer, cleanScene, textureLoader } from '~/utils/three';
+import { cleanRenderer, cleanScene, isWebGLAvailable, textureLoader } from '~/utils/three';
 import styles from './carousel.module.css';
 import fragment from './carousel-fragment.glsl?raw';
 import vertex from './carousel-vertex.glsl?raw';
@@ -66,14 +66,23 @@ export const Carousel = ({ width, height, images, placeholder, ...rest }) => {
   }, [dragging]);
 
   useEffect(() => {
+    if (!isWebGLAvailable() || !canvas.current) return;
+
     const cameraOptions = [width / -2, width / 2, height / 2, height / -2, 1, 1000];
-    renderer.current = new WebGLRenderer({
-      canvas: canvas.current,
-      antialias: false,
-      alpha: true,
-      powerPreference: 'high-performance',
-      failIfMajorPerformanceCaveat: true,
-    });
+
+    try {
+      renderer.current = new WebGLRenderer({
+        canvas: canvas.current,
+        antialias: false,
+        alpha: true,
+        powerPreference: 'high-performance',
+        failIfMajorPerformanceCaveat: false,
+      });
+    } catch (error) {
+      console.warn('Carousel WebGL initialization failed:', error);
+      return;
+    }
+
     camera.current = new OrthographicCamera(...cameraOptions);
     scene.current = new Scene();
     renderer.current.setPixelRatio(2);
@@ -95,12 +104,15 @@ export const Carousel = ({ width, height, images, placeholder, ...rest }) => {
     let mounted = true;
 
     const loadImages = async () => {
-      const anisotropy = renderer.current.capabilities.getMaxAnisotropy();
+      if (!renderer.current) return;
+      const anisotropy = renderer.current.capabilities?.getMaxAnisotropy?.() || 1;
 
       const texturePromises = images.map(async image => {
         const imageSrc = image.srcSet ? await resolveSrcFromSrcSet(image) : image.src;
         const imageTexture = await textureLoader.loadAsync(imageSrc);
-        await renderer.current.initTexture(imageTexture);
+        if (renderer.current) {
+          await renderer.current.initTexture(imageTexture);
+        }
         imageTexture.colorSpace = LinearSRGBColorSpace;
         imageTexture.minFilter = LinearFilter;
         imageTexture.magFilter = LinearFilter;
@@ -112,7 +124,7 @@ export const Carousel = ({ width, height, images, placeholder, ...rest }) => {
       const textures = await Promise.all(texturePromises);
 
       // Cancel if the component has unmounted during async code
-      if (!mounted) return;
+      if (!mounted || !scene.current) return;
 
       material.current = new ShaderMaterial({
         uniforms: {
@@ -137,7 +149,9 @@ export const Carousel = ({ width, height, images, placeholder, ...rest }) => {
       setTextures(textures);
 
       requestAnimationFrame(() => {
-        renderer.current.render(scene.current, camera.current);
+        if (renderer.current && scene.current && camera.current) {
+          renderer.current.render(scene.current, camera.current);
+        }
       });
     };
 
@@ -212,6 +226,7 @@ export const Carousel = ({ width, height, images, placeholder, ...rest }) => {
 
   useEffect(() => {
     const handleResize = () => {
+      if (!canvas.current) return;
       const rect = canvas.current.getBoundingClientRect();
       setCanvasRect(rect);
     };
@@ -229,7 +244,7 @@ export const Carousel = ({ width, height, images, placeholder, ...rest }) => {
 
     const animate = () => {
       animation = requestAnimationFrame(animate);
-      if (animating.current) {
+      if (animating.current && renderer.current && scene.current && camera.current) {
         renderer.current.render(scene.current, camera.current);
       }
     };

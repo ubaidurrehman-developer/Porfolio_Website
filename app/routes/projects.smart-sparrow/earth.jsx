@@ -48,6 +48,7 @@ import {
   cleanRenderer,
   cleanScene,
   getChild,
+  isWebGLAvailable,
   modelLoader,
   removeLights,
   textureLoader,
@@ -62,7 +63,7 @@ const interpolatePosition = (value, nextValue, percent) =>
 
 const positionToString = value =>
   Object.keys(value)
-    .map(key => parseFloat(Math.round(value[key] * 100) / 100).toFixed(2))
+    .map(key => `${key}: ${value[key]}`)
     .join(', ');
 
 const getPositionValues = section => {
@@ -75,35 +76,25 @@ const getPositionValues = section => {
   };
 };
 
-const isEqualPosition = (position1, position2) => {
-  const round = (num = 0) => Math.round((num + Number.EPSILON) * 100) / 100;
-
-  return (
-    round(position1?.x) === round(position2?.x) &&
-    round(position1?.y) === round(position2?.y) &&
-    round(position1?.z) === round(position2?.z)
-  );
-};
-
 const cameraSpringConfig = {
   stiffness: 80,
   damping: 40,
-  mass: 2,
+  mass: 1,
   restSpeed: 0.001,
-  restDelta: 0.001,
 };
 
 const chunkSpringConfig = {
-  stiffness: 40,
-  damping: 30,
-  mass: 2,
+  stiffness: 30,
+  damping: 20,
+  mass: 1.4,
   restSpeed: 0.001,
-  restDelta: 0.001,
 };
 
 const opacitySpringConfig = {
   stiffness: 40,
-  damping: 30,
+  damping: 20,
+  mass: 1,
+  restSpeed: 0.001,
 };
 
 const EarthContext = createContext({});
@@ -117,16 +108,16 @@ export const Earth = ({
   children,
 }) => {
   const [loaded, setLoaded] = useState(false);
-  const [grabbing, setGrabbing] = useState(false);
   const [visible, setVisible] = useState(false);
   const [loaderVisible, setLoaderVisible] = useState(false);
+  const [grabbing, setGrabbing] = useState(false);
   const sectionRefs = useRef([]);
   const container = useRef();
   const labelContainer = useRef();
   const canvas = useRef();
   const scene = useRef();
-  const renderer = useRef();
   const camera = useRef();
+  const renderer = useRef();
   const clock = useRef();
   const mouse = useRef();
   const raycaster = useRef();
@@ -152,52 +143,62 @@ export const Earth = ({
   const opacitySpring = useSpring(0, opacitySpringConfig);
 
   const renderFrame = useCallback(() => {
-    if (!inViewport) {
+    if (!inViewport || !renderer.current || !scene.current || !camera.current) {
       cancelAnimationFrame(animationFrame.current);
       return;
     }
 
     animationFrame.current = requestAnimationFrame(renderFrame);
-    const delta = clock.current.getDelta();
-    mixer.current.update(delta);
-    controls.current.update();
+    const delta = clock.current?.getDelta?.() || 0;
+    mixer.current?.update?.(delta);
+    controls.current?.update?.();
     renderer.current.render(scene.current, camera.current);
 
     // Render labels
-    labelElements.current.forEach(label => {
-      const { element, position, sprite } = label;
-      const vector = new Vector3(...position);
-      const meshDistance = camera.current.position.distanceTo(
-        sceneModel.current.position
-      );
-      const spriteDistance = camera.current.position.distanceTo(sprite.position);
-      const spriteBehindObject = spriteDistance > meshDistance;
+    if (sceneModel.current) {
+      labelElements.current.forEach(label => {
+        const { element, position, sprite } = label;
+        const vector = new Vector3(...position);
+        const meshDistance = camera.current.position.distanceTo(
+          sceneModel.current.position
+        );
+        const spriteDistance = camera.current.position.distanceTo(sprite.position);
+        const spriteBehindObject = spriteDistance > meshDistance;
 
-      vector.project(camera.current);
-      vector.x = Math.round((0.5 + vector.x / 2) * window.innerWidth);
-      vector.y = Math.round((0.5 - vector.y / 2) * window.innerHeight);
-      element.style.setProperty('--posX', numToPx(vector.x));
-      element.style.setProperty('--posY', numToPx(vector.y));
+        vector.project(camera.current);
+        vector.x = Math.round((0.5 + vector.x / 2) * window.innerWidth);
+        vector.y = Math.round((0.5 - vector.y / 2) * window.innerHeight);
+        element.style.setProperty('--posX', numToPx(vector.x));
+        element.style.setProperty('--posY', numToPx(vector.y));
 
-      if (spriteBehindObject) {
-        element.dataset.occluded = true;
-      } else {
-        element.dataset.occluded = false;
-      }
-    });
+        if (spriteBehindObject) {
+          element.dataset.occluded = true;
+        } else {
+          element.dataset.occluded = false;
+        }
+      });
+    }
   }, [inViewport]);
 
   useEffect(() => {
     mounted.current = true;
+    if (!isWebGLAvailable() || !canvas.current) return;
+
     const { innerWidth, innerHeight } = window;
 
-    renderer.current = new WebGLRenderer({
-      canvas: canvas.current,
-      antialias: false,
-      alpha: true,
-      powerPreference: 'high-performance',
-      failIfMajorPerformanceCaveat: true,
-    });
+    try {
+      renderer.current = new WebGLRenderer({
+        canvas: canvas.current,
+        antialias: false,
+        alpha: true,
+        powerPreference: 'high-performance',
+        failIfMajorPerformanceCaveat: false,
+      });
+    } catch (error) {
+      console.warn('Earth WebGL initialization failed:', error);
+      return;
+    }
+
     renderer.current.setPixelRatio(1);
     renderer.current.outputColorSpace = SRGBColorSpace;
     renderer.current.toneMapping = ACESFilmicToneMapping;
@@ -240,6 +241,8 @@ export const Earth = ({
   }, []);
 
   useEffect(() => {
+    if (!controls.current) return;
+
     const handleControlStart = () => {
       setGrabbing(true);
       cameraXSpring.stop();
@@ -258,8 +261,8 @@ export const Earth = ({
     controls.current.addEventListener('end', handleControlEnd);
 
     return () => {
-      controls.current.removeEventListener('start', handleControlStart);
-      controls.current.removeEventListener('end', handleControlEnd);
+      controls.current?.removeEventListener('start', handleControlStart);
+      controls.current?.removeEventListener('end', handleControlEnd);
     };
   }, [cameraXSpring, cameraYSpring, cameraZSpring]);
 
@@ -322,13 +325,13 @@ export const Earth = ({
   ]);
 
   useEffect(() => {
-    if (windowWidth <= media.tablet) {
+    if (windowWidth <= media.tablet && controls.current) {
       controls.current.enabled = false;
     }
   }, [windowWidth]);
 
   useEffect(() => {
-    if (loaded) return;
+    if (loaded || !renderer.current || !scene.current) return;
 
     const hdrLoader = new HDRCubeTextureLoader();
     const pmremGenerator = new PMREMGenerator(renderer.current);
@@ -349,7 +352,7 @@ export const Earth = ({
           material.alphaMap = material.map;
         }
 
-        if (material) {
+        if (material && renderer.current) {
           await renderer.current.initTexture(material);
         }
       });
@@ -369,26 +372,34 @@ export const Earth = ({
       hdrTexture.magFilter = LinearFilter;
       envMap.current = pmremGenerator.fromCubemap(hdrTexture);
       pmremGenerator.dispose();
-      await renderer.current.initTexture(envMap.current.texture);
+      if (renderer.current) {
+        await renderer.current.initTexture(envMap.current.texture);
+      }
     };
 
     const loadBackground = async () => {
       const backgroundTexture = await textureLoader.loadAsync(milkywayBg);
       backgroundTexture.mapping = EquirectangularReflectionMapping;
       backgroundTexture.colorSpace = SRGBColorSpace;
-      scene.current.background = backgroundTexture;
-      await renderer.current.initTexture(backgroundTexture);
+      if (scene.current) {
+        scene.current.background = backgroundTexture;
+      }
+      if (renderer.current) {
+        await renderer.current.initTexture(backgroundTexture);
+      }
     };
 
     const handleLoad = async () => {
       await Promise.all([loadBackground(), loadEnv(), loadModel()]);
 
-      sceneModel.current.traverse(({ material }) => {
-        if (material) {
-          material.envMap = envMap.current.texture;
-          material.needsUpdate = true;
-        }
-      });
+      if (sceneModel.current) {
+        sceneModel.current.traverse(({ material }) => {
+          if (material && envMap.current) {
+            material.envMap = envMap.current.texture;
+            material.needsUpdate = true;
+          }
+        });
+      }
 
       if (mounted.current) {
         setLoaded(true);
@@ -406,7 +417,7 @@ export const Earth = ({
 
   useEffect(() => {
     // Add models and textures once visible
-    if (loaded && !contentAdded.current) {
+    if (loaded && !contentAdded.current && scene.current && sceneModel.current) {
       scene.current.add(sceneModel.current);
       contentAdded.current = true;
     }
@@ -423,7 +434,7 @@ export const Earth = ({
   }, [renderFrame, inViewport, loaded]);
 
   useEffect(() => {
-    if (loaded) {
+    if (loaded && labelContainer.current) {
       labelContainer.current.innerHTML = '';
       labelElements.current = labels.map(label => {
         const element = document.createElement('div');
@@ -431,7 +442,7 @@ export const Earth = ({
         element.dataset.hidden = true;
         element.style.setProperty('--delay', `${label.delay || 0}ms`);
         element.textContent = label.text;
-        labelContainer.current.appendChild(element);
+        labelContainer.current?.appendChild(element);
         const sprite = new Sprite();
         sprite.position.set(...label.position);
         sprite.scale.set(60, 60, 1);
@@ -441,9 +452,11 @@ export const Earth = ({
   }, [labels, loaded]);
 
   useEffect(() => {
-    renderer.current.setSize(windowWidth, windowHeight);
-    camera.current.aspect = windowWidth / windowHeight;
-    camera.current.updateProjectionMatrix();
+    if (renderer.current && camera.current) {
+      renderer.current.setSize(windowWidth, windowHeight);
+      camera.current.aspect = windowWidth / windowHeight;
+      camera.current.updateProjectionMatrix();
+    }
   }, [windowWidth, windowHeight]);
 
   useEffect(() => {

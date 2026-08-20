@@ -24,7 +24,7 @@ import {
   SRGBColorSpace,
 } from 'three';
 import { classes, cssProps, msToNum, numToMs } from '~/utils/style';
-import { cleanRenderer, cleanScene, modelLoader, removeLights } from '~/utils/three';
+import { cleanRenderer, cleanScene, isWebGLAvailable, modelLoader, removeLights } from '~/utils/three';
 import { throttle } from '~/utils/throttle';
 import styles from './armor.module.css';
 
@@ -57,15 +57,22 @@ export const Armor = ({
   const rotationY = useSpring(0, rotationSpringConfig);
 
   useEffect(() => {
+    if (!isWebGLAvailable() || !canvas.current || !container.current) return;
+
     const { clientWidth, clientHeight } = container.current;
 
-    renderer.current = new WebGLRenderer({
-      canvas: canvas.current,
-      alpha: true,
-      antialias: false,
-      powerPreference: 'high-performance',
-      failIfMajorPerformanceCaveat: true,
-    });
+    try {
+      renderer.current = new WebGLRenderer({
+        canvas: canvas.current,
+        alpha: true,
+        antialias: false,
+        powerPreference: 'high-performance',
+        failIfMajorPerformanceCaveat: false,
+      });
+    } catch (error) {
+      console.warn('Armor WebGL initialization failed:', error);
+      return;
+    }
 
     renderer.current.setPixelRatio(2);
     renderer.current.setSize(clientWidth, clientHeight);
@@ -95,10 +102,14 @@ export const Armor = ({
     lights.current.forEach(light => scene.current.add(light));
 
     const load = async () => {
+      if (!renderer.current || !scene.current || !modelGroup.current) return;
+
       const loadGltf = modelLoader.loadAsync(armor);
       const loadEnv = cubeTextureLoader.loadAsync([vknx, vkny, vknz, vkpx, vkpy, vkpz]);
 
       const [gltf, envTexture] = await Promise.all([loadGltf, loadEnv]);
+
+      if (!renderer.current || !scene.current || !modelGroup.current) return;
 
       modelGroup.current.add(gltf.scene);
       gltf.scene.rotation.y = MathUtils.degToRad(180);
@@ -111,7 +122,7 @@ export const Armor = ({
       await renderer.current.initTexture(scene.current.environment);
 
       modelGroup.current.traverse(async node => {
-        if (node.material) {
+        if (node.material && renderer.current) {
           await renderer.current.initTexture(node.material);
         }
       });
@@ -129,17 +140,21 @@ export const Armor = ({
     });
 
     const unsubscribeX = rotationX.on('change', value => {
-      modelGroup.current.rotation.x = value;
+      if (modelGroup.current) {
+        modelGroup.current.rotation.x = value;
+      }
       renderFrame();
     });
 
     const unsubscribeY = rotationY.on('change', value => {
-      modelGroup.current.rotation.y = value;
+      if (modelGroup.current) {
+        modelGroup.current.rotation.y = value;
+      }
       renderFrame();
     });
 
     return () => {
-      removeLights(lights.current);
+      removeLights(lights.current || []);
       cleanScene(scene.current);
       cleanRenderer(renderer.current);
       unsubscribeX();
@@ -150,7 +165,9 @@ export const Armor = ({
 
   // Handle render passes for a single frame
   const renderFrame = useCallback(() => {
-    renderer.current.render(scene.current, camera.current);
+    if (renderer.current && scene.current && camera.current) {
+      renderer.current.render(scene.current, camera.current);
+    }
   }, []);
 
   // Handle mouse move animation
