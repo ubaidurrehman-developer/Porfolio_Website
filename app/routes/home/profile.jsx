@@ -18,20 +18,17 @@ import styles from './profile.module.css';
 const ProfileText = ({ visible, titleId }) => (
   <Fragment>
     <Heading className={styles.title} data-visible={visible} level={3} id={titleId}>
-      <DecoderText text="Build Smarter. Move Faster. Ship AI That Matters." start={visible} delay={500} />
-    </Heading>
+      <DecoderText text="About Me" start={visible} delay={500} />
+    </Heading>    
     <Text className={styles.description} data-visible={visible} size="l" as="p">
-      I’m Ubaid ur Rehman, an AI Engineer &amp; ML Specialist based in Pakistan, passionate about turning ambitious ideas into intelligent, production-ready products.
-    </Text>
-    <Text className={styles.description} data-visible={visible} size="l" as="p">
-      I design, build, and deploy AI systems across the modern AI landscape — from Computer Vision and Document Intelligence to LLMs, RAG pipelines, AI agents, and autonomous workflow automation. I’ve worked on real-world AI solutions at <Link href="https://formmate.ai">FormMate</Link>, helping transform complex challenges into scalable, reliable, and impactful products.
+      I design, build, and deploy AI systems across the modern AI landscape — from Computer Vision and Document Intelligence to LLMs, RAG pipelines, AI agents, and autonomous workflow automation. I’ve worked on real-world AI solutions at <Link href="#project">FormMate</Link>, helping transform complex challenges into scalable, reliable, and impactful products.
     </Text>
     <Text className={styles.description} data-visible={visible} size="l" as="p">
       <strong>Ready to put AI to work?</strong><br />
       Whether you're starting with an idea, improving an existing product, or looking to bring intelligent capabilities into your tech stack, I can help take it from concept to production. Together, we can build AI solutions that are not just impressive — but fast, reliable, scalable, and built to create real business value.
     </Text>
     <Text className={styles.description} data-visible={visible} size="l" as="p">
-      Have an exciting project in mind? Let's turn it into something exceptional. &rarr; <Link href="/contact">Let's Talk</Link>
+      Have an exciting project in mind? Let's turn it into something exceptional.
     </Text>
   </Fragment>
 );
