@@ -21,18 +21,20 @@ const ProfileText = ({ visible, titleId }) => (
       <DecoderText text="Hi, I'm Ubaid" start={visible} delay={500} />
     </Heading>
     <Text className={styles.description} data-visible={visible} size="l" as="p">
-      I'm Ubaid ur Rehman, an AI Engineer & ML Specialist based in Pakistan. I specialize in
-      Computer Vision, Document Intelligence, and Large Language Models (LLMs). My work
-      includes building production-grade OCR pipelines (GLM-OCR, 1.1B params), multi-agent
-      document intelligence systems (FormMate), and workflow automation platforms at{' '}
-      <Link href="https://10pearls.com">10Pearls</Link> and{' '}
+      I'm Ubaid ur Rehman, an AI Engineer &amp; ML Specialist based in Pakistan. I design,
+      build, and deploy intelligent systems across the full AI spectrum — from Computer Vision
+      and Document Intelligence to Large Language Models (LLMs), RAG pipelines, and autonomous
+      workflow automations at <Link href="https://10pearls.com">10Pearls</Link> and{' '}
       <Link href="https://formmate.ai">FormMate</Link>.
     </Text>
     <Text className={styles.description} data-visible={visible} size="l" as="p">
-      I'm passionate about pushing the boundaries of AI in real-world applications —
-      from 85–90% accuracy improvements to 1.2s inference latency at scale. I'm
-      always open to exciting AI/ML projects and collaborations, so feel free to{' '}
-      <Link href="/contact">reach out</Link>.
+      Ready to evolve your product with AI? From initial concept to production scale, I help
+      forward-thinking teams turn ambitious ideas into fast, reliable, and intelligent applications
+      that deliver real business impact.
+    </Text>
+    <Text className={styles.description} data-visible={visible} size="l" as="p">
+      Have an exciting project in mind or looking to bring intelligent capabilities to your stack?
+      Feel free to <Link href="/contact">reach out and let's build something exceptional together &rarr;</Link>
     </Text>
   </Fragment>
 );

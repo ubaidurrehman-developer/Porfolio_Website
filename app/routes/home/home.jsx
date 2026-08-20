@@ -13,7 +13,6 @@ import { baseMeta } from '~/utils/meta';
 import { Intro } from './intro';
 import { Profile } from './profile';
 import { ProjectSummary } from './project-summary';
-import { HireCta } from './hire-cta';
 import { useEffect, useRef, useState } from 'react';
 import config from '~/config.json';
 import styles from './home.module.css';
@@ -54,10 +53,9 @@ export const Home = () => {
   const projectThree = useRef();
   const projectFour = useRef();
   const details = useRef();
-  const hireMe = useRef();
 
   useEffect(() => {
-    const sections = [intro, projectOne, projectTwo, projectThree, projectFour, details, hireMe];
+    const sections = [intro, projectOne, projectTwo, projectThree, projectFour, details];
 
     const sectionObserver = new IntersectionObserver(
       (entries, observer) => {
@@ -177,11 +175,6 @@ export const Home = () => {
         sectionRef={details}
         visible={visibleSections.includes(details.current)}
         id="details"
-      />
-      <HireCta
-        sectionRef={hireMe}
-        visible={visibleSections.includes(hireMe.current)}
-        id="hire-me"
       />
       <Footer />
     </div>
